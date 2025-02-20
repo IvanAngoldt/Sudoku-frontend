@@ -1,0 +1,46 @@
+header {
+    width: 100%;
+    background-color: #cecece;
+}
+
+.header-nav {
+    margin: auto;
+    max-width: 940px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.header-left a {
+    font-size: 28px;
+    padding: 13px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.header-link {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.header-link:hover {
+    background-color: #e0e0e0;
+}
+
+.header-link-text {
+    font-weight: bold;
+}
+  

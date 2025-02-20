@@ -1,6 +1,6 @@
-import SudokuBackground from "./Background";
+import SudokuBackground from "../../сomponents/Background/Background";
 import { Outlet } from "react-router-dom";
-import "../styles/Auth.css"; 
+import "./Auth.css";
 
 const AuthLayout = () => {
   return (

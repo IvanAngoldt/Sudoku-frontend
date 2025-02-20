@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import "../styles/Auth.css"; // Стили
+import "./Auth.css";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);

@@ -1,19 +1,31 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AuthLayout from "./сomponents/AuthLayout";
-import LoginPage from "./сomponents/LoginPage";
-import SignupPage from "./сomponents/SignupPage";
+
+// import Header from "./сomponents/Header/Header"
+
+import AuthLayout from "./Pages/Auth/AuthLayout";
+import LoginPage from "./Pages/Auth/LoginPage";
+import SignupPage from "./Pages/Auth/SignupPage";
+
+import MainLayout from "./Pages/MainLayout";
+import ProfilePage from "./Pages/Profile/ProfilePage";
+
 
 const App = () => {
   return (
   <BrowserRouter>
     <Routes>
-      {/* <Route path="/" element={<MainPage />} /> */}
 
-      {/* Группа маршрутов с общим фоном */}
       <Route element={<AuthLayout />}>
         <Route path="login" element={<LoginPage />} />
         <Route path="signup" element={<SignupPage />} />
       </Route>
+
+      {/* {<Header />} */}
+
+      <Route element={<MainLayout />}>
+        <Route path="profile" element={<ProfilePage />} />
+      </Route>
+
     </Routes>
   </BrowserRouter>
   );

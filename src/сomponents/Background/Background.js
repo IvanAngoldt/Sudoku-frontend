@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
-import "../styles/Background.css"; // Подключаем стили
+import "./Background.css";
 
-const NUMBERS_COUNT = 70; // Количество цифр
+const getNumbersCount = () => {
+  const area = window.innerWidth * window.innerHeight;
+  return Math.max(20, Math.floor(area / 50000)); // Подбираем коэффициент
+};
 
 const generateRandomNumbers = (count) => {
   return Array.from({ length: count }, (_, i) => ({
@@ -17,9 +20,21 @@ const generateRandomNumbers = (count) => {
 };
 
 const SudokuBackground = () => {
-  const [sudokuNumbers, setSudokuNumbers] = useState(generateRandomNumbers(NUMBERS_COUNT));
+  const [numbersCount, setNumbersCount] = useState(getNumbersCount);
+  const [sudokuNumbers, setSudokuNumbers] = useState(generateRandomNumbers(numbersCount));
   const [cursorPos, setCursorPos] = useState({ x: 50, y: 50 });
   const [formBounds, setFormBounds] = useState(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const newCount = getNumbersCount();
+      setNumbersCount(newCount);
+      setSudokuNumbers(generateRandomNumbers(newCount));
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -60,11 +75,9 @@ const SudokuBackground = () => {
           let newX = num.x + num.velocityX;
           let newY = num.y + num.velocityY;
 
-          // Добавляем естественное случайное движение
           num.velocityX += (Math.random() - 0.5) * 0.02;
           num.velocityY += (Math.random() - 0.5) * 0.02;
 
-          // Проверяем расстояние до курсора
           const dx = num.x - cursorPos.x;
           const dy = num.y - cursorPos.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
@@ -75,7 +88,6 @@ const SudokuBackground = () => {
             num.velocityY += (dy / distance) * force * 0.1;
           }
 
-          // Проверяем столкновение с формой
           if (formBounds) {
             if (
               num.x > formBounds.left - 3 &&
@@ -91,11 +103,9 @@ const SudokuBackground = () => {
             }
           }
 
-          // Ограничение скорости
           num.velocityX *= 0.99;
           num.velocityY *= 0.99;
 
-          // Отталкивание от границ экрана
           if (newX < 0 || newX > 100) num.velocityX *= -1;
           if (newY < 0 || newY > 100) num.velocityY *= -1;
 
