@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "../styles/SudokuBackground.css"; // Подключаем стили
+import "../styles/Background.css"; // Подключаем стили
 
 const NUMBERS_COUNT = 70; // Количество цифр
 

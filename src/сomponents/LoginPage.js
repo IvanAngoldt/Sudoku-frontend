@@ -1,6 +1,6 @@
 import { useState } from "react";
-import SudokuBackground from "./SudokuBackground";
-import "../styles/LoginPage.css"; // Стили
+import { Link } from "react-router-dom";
+import "../styles/Auth.css"; // Стили
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -37,13 +37,12 @@ const LoginPage = () => {
 
   return (
     <div className="login-container">
-      <SudokuBackground />
       <div className="login-box">
         {/* Угловые номера */}
-        <div className="corner-number top-left">1</div>
+        {/* <div className="corner-number top-left">1</div>
         <div className="corner-number top-right">9</div>
         <div className="corner-number bottom-left">7</div>
-        <div className="corner-number bottom-right">4</div>
+        <div className="corner-number bottom-right">4</div> */}
 
         <h2 className="login-title">Welcome Back</h2>
         <p className="login-subtitle">Sign in to continue your game</p>
@@ -65,7 +64,7 @@ const LoginPage = () => {
                 value={loginIdentifier}
                 onChange={(e) => setLoginIdentifier(e.target.value)}
                 onBlur={() => handleBlur("login")}
-                placeholder="Nickname or email"
+                placeholder="Nickname or Email"
               />
             </div>
           </div>
@@ -84,7 +83,7 @@ const LoginPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onBlur={() => handleBlur("password")}
-                placeholder="••••••••"
+                placeholder="Password"
                 minLength={6}
               />
               <span
@@ -107,12 +106,12 @@ const LoginPage = () => {
           </div>
 
           <button type="submit" disabled={isLoading} className="login-button">
-            {isLoading ? "SIGNING IN..." : "SIGN IN"}
+            {isLoading ? "LOGGING IN..." : "LOG IN"}
           </button>
         </form>
 
         <p className="register-text">
-          Don’t have an account? <a href="#" className="register-link">Sign up</a>
+          Don’t have an account? <Link to="/signup" className="register-link">Sign up</Link>
         </p>
       </div>
     </div>
