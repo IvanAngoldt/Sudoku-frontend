@@ -9,6 +9,7 @@ import SignupPage from "./Pages/Auth/SignupPage";
 import MainLayout from "./Pages/MainLayout";
 import ProfilePage from "./Pages/Profile/ProfilePage";
 import MainPage from "./Pages/Main/MainPage";
+import SingleGamePage from "./Pages/SingleGame/SingleGamePage";
 
 
 const App = () => {
@@ -26,6 +27,7 @@ const App = () => {
       <Route element={<MainLayout />}>
         <Route path="profile" element={<ProfilePage />} />
         <Route path="/" element={<MainPage />} />
+        <Route path="single" element={<SingleGamePage />} />
       </Route>
 
     </Routes>
