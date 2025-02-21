@@ -11,8 +11,8 @@ const Header = () => {
     <header>
       <nav className="header-nav">
         <div className="header-left">
-          <Link to="profile" className="header-link">
-              MainPage
+          <Link to="/" className="header-link">
+              KubSudoku
           </Link>
         </div>
         <div className="header-right">
