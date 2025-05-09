@@ -1,23 +1,24 @@
 import React from 'react';
+import "./sudokuStyles.css";
 
-import "./sudokuStyles.css"
+const Difficulty = ({ onDifficultyChange, isActive, difficulty }) => {
+  const handleChange = (event) => {
+    onDifficultyChange(event.target.value);
+  };
 
-const Difficulty = ({ onDifficultyChange, isActive }) => {
-    const handleChange = (event) => {
-        onDifficultyChange(event.target.value);
-    };
-
-    return (
-        // <div className="difficulty">
-        <div className={`difficulty ${isActive ? '' : 'disabled'}`}>
-            <label>Select Difficulty: </label>
-            <select onChange={handleChange}>
-                <option value="Easy">Easy</option>
-                <option value="Medium">Medium</option>
-                <option value="Hard">Hard</option>
-            </select>
-        </div>
-    );
-}
+  return (
+    <div className={`difficulty ${isActive ? '' : 'disabled'}`}>
+      <label>Выберите сложность: </label>
+      <select onChange={handleChange} value={difficulty}>
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+        <option value="very_hard">Very Hard</option>
+        <option value="insane">Insane</option>
+        <option value="inhuman">Inhuman</option>
+      </select>
+    </div>
+  );
+};
 
 export default Difficulty;

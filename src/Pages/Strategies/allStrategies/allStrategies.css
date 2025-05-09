@@ -1,0 +1,14 @@
+.strategy_text {
+    display: flex;
+    padding-top: 20px;
+    text-align: justify;
+}
+
+.inrow {
+    display: flex;
+    flex-direction: row;
+}
+
+.strategy_img {
+    padding: 25px;
+}

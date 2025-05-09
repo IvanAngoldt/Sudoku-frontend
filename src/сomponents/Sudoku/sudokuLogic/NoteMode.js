@@ -1,15 +1,8 @@
-import React from "react";
-import "./sudokuStyles.css"
+import React from 'react';
+import RoundButton from './RoundButton';
 
-const NoteMode = ({ noteClick, noteMode }) => {
-    return (
-        <div
-            onClick={() => noteClick()}
-            style={{ cursor: 'pointer', fontWeight: noteMode ? 'bold' : '' }}
-        >
-            Заметка
-        </div>
-    )
-}
+const NoteMode = ({ noteClick, noteMode }) => (
+  <RoundButton onClick={noteClick} icon="✏️" label="Note" active={noteMode} />
+);
 
-export default NoteMode
+export default NoteMode;

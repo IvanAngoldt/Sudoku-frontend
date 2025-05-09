@@ -1,0 +1,35 @@
+.achievement-item {
+    display: flex;
+    gap: 12px;
+    background-color: #f1f3f5;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    align-items: flex-start;
+  }
+  
+  .achievement-icon {
+    font-size: 24px;
+  }
+  
+  .achievement-text {
+    flex-grow: 1;
+  }
+  
+  .achievement-title {
+    font-size: 1.1rem;
+    margin: 0 0 4px;
+    color: #212529;
+  }
+  
+  .achievement-description {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #495057;
+  }
+  
+  .achievement-icon-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+  }

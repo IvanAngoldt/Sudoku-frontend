@@ -1,17 +1,8 @@
 import React from 'react';
+import RoundButton from './RoundButton';
 
-import "./sudokuStyles.css"
-
-const ClearCell = ({clearCell}) => {
-    return (
-        <div
-            onClick={() => clearCell()}
-            style={{ cursor: 'pointer' }}
-        >
-
-            Очистить поле
-        </div>
-    );
-}
+const ClearCell = ({ clearCell }) => (
+  <RoundButton onClick={clearCell} icon="🧽" label="Clear" />
+);
 
 export default ClearCell;

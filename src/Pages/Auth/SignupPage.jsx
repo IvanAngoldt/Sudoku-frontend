@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Auth.css";
+import { useNavigate } from "react-router-dom";
+
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const [nickname, setNickname] = useState("");
@@ -15,26 +19,50 @@ const LoginPage = () => {
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setErrorMessage("");
-
+  
     if (!nickname || !email || !password || !confirmPassword) {
-      setErrorMessage("Please fill in all fields.")
+      setErrorMessage("Please fill in all fields.");
       return;
     }
-    
+  
     if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match.");
       return;
-    }  
-
+    }
+  
     setIsLoading(true);
-
-    setTimeout(() => {
+  
+    try {
+      const response = await fetch("http://localhost:8080/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: nickname,
+          email,
+          password,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        setErrorMessage(data.error || "Registration failed.");
+      } else {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("nickname", data.nickname);
+        localStorage.setItem("email", data.email);
+        navigate("/"); 
+      }
+    } catch (error) {
+      setErrorMessage("Something went wrong.");
+    } finally {
       setIsLoading(false);
-      alert("Signed in successfully!");
-    }, 1500);
+    }
   };
 
 
@@ -52,7 +80,7 @@ const LoginPage = () => {
 
         {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-        <form onSubmit={handleLogin} className="login-form">
+        <form onSubmit={handleRegister} className="login-form">
           <div className="input-group">
             <label htmlFor="nickname">Nickname</label>
             <div className={`input-wrapper`}>

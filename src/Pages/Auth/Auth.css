@@ -49,7 +49,6 @@
     font-size: 1rem;
     color: #6c757d;
     margin-top: 5px;
-    margin-bottom: 30px;
 }
 
 /* Поля ввода */
@@ -156,3 +155,13 @@ input:-webkit-autofill {
     -webkit-text-fill-color: #212529 !important;
   }
   
+  .error-content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 0.95rem;
+  }

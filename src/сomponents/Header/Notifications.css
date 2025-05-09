@@ -14,13 +14,13 @@
   }
   
   .notification-icon:hover {
-    background-color: #e0e0e0;
+    background-color: rgba(255, 255, 255, 0.1); 
   }
   
   .notification-icon svg {
     width: 32px;
     height: 32px;
-    fill: #333;
+    fill: #ffffff;
     transition: fill 0.3s ease;
   }
   

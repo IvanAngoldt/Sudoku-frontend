@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import "./sudokuStyles.css"
 
-const Timer = ({ onStatusChange, onReset }) => {
+const Timer = ({ onStatusChange, onReset, won, onTimeUpdate }) => {
     const [time, setTime] = useState(0);
     const [isActive, setIsActive] = useState(true);
+
+    useEffect(() => {
+        if (won) {
+            setIsActive(false);
+        }
+    }, [won]);
 
     useEffect(() => {
         let interval = null;
@@ -11,11 +17,16 @@ const Timer = ({ onStatusChange, onReset }) => {
             interval = setInterval(() => {
                 setTime((prevTime) => prevTime + 1);
             }, 1000);
-        } else if (!isActive && time !== 0) {
-            clearInterval(interval);
         }
         return () => clearInterval(interval);
-    }, [isActive, time]);
+    }, [isActive]);
+
+    // 💡 вызываем onTimeUpdate после изменения time
+    useEffect(() => {
+        if (onTimeUpdate) {
+            onTimeUpdate(time);
+        }
+    }, [time, onTimeUpdate]);
 
     useEffect(() => {
         onStatusChange(isActive);
@@ -30,9 +41,7 @@ const Timer = ({ onStatusChange, onReset }) => {
     const formatTime = (seconds) => {
         const getMinutes = Math.floor(seconds / 60);
         const getSeconds = seconds % 60;
-        return `${getMinutes < 10 ? `0${getMinutes}` : getMinutes}:${
-            getSeconds < 10 ? `0${getSeconds}` : getSeconds
-        }`;
+        return `${getMinutes < 10 ? `0${getMinutes}` : getMinutes}:${getSeconds < 10 ? `0${getSeconds}` : getSeconds}`;
     };
 
     const toggleTimer = () => {
@@ -40,7 +49,7 @@ const Timer = ({ onStatusChange, onReset }) => {
     };
 
     return (
-        <div className={`timer`}>
+        <div className="timer">
             <div>{formatTime(time)}</div>
             <button onClick={toggleTimer}>
                 {isActive ? 'Pause' : 'Resume'}

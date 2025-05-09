@@ -1,0 +1,132 @@
+.strategies-main-container {
+  flex: 1;
+  width: 900px;
+  margin: 40px auto;
+  background-color: #f9f9f9;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.strategies-main-content {
+  padding: 40px 30px;
+}
+
+.strategies-title {
+  text-align: center;
+  font-size: 42px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 50px;
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.strategies-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.strategy-card {
+  background-color: #ffffff;
+  padding: 0;
+  border-radius: 16px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.strategy-card:hover {
+  box-shadow: 0 0 0 2px #3498db, 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.strategy-card-header {
+  height: 80px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  gap: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.strategy-icon {
+  font-size: 24px;
+  color: #3498db;
+  opacity: 0.9;
+}
+
+.strategy-card h3 {
+  font-size: 24px;
+  color: #2c3e50;
+  font-family: 'Segoe UI Semibold', 'Roboto', sans-serif;
+  margin: 0;
+  text-align: center;
+  word-break: break-word;
+  text-wrap: balance;
+}
+
+.strategy-card ul {
+  list-style: none;
+  padding: 25px 30px 0px 15px;
+  margin: 0;
+}
+
+.strategy-card li {
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  color: #333;
+  position: relative;
+  padding-left: 25px;
+}
+
+.strategy-card li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background-color: #3498db;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.strategy-card li a {
+  color: #3498db;
+  text-decoration: none;
+  font-weight: 500;
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.strategy-card li a:hover {
+  background-color: #f0f7ff;
+  color: #2980b9;
+  transform: translateX(5px);
+}
+
+.strategy-card li a:hover::before {
+  background-color: #2980b9;
+}
+
+.strategy-card li a:focus {
+  outline: 2px solid #80bdff;
+  outline-offset: 2px;
+  background-color: #f0f7ff;
+}

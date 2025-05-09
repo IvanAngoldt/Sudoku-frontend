@@ -1,26 +1,209 @@
 .profile-container {
   flex: 1;
   width: 900px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  overflow: hidden;
 }
 
 .profile-header {
-  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 30px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
-.profile-title {
+.profile-header-container {
+  display: flex;
+  position: relative;
+  align-items: center;
+  width: 100%;
+}
+
+.edit-button-container {
+  
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.edit-button {
+  background-color: transparent;
+  color: #007bff;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.profile-header-container {
+  display: flex;
+  width: 100%;
+}
+
+.profile-info {
+  margin-left: 50px;
+}
+
+.profile-info h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #2c3e50;
+}
+
+.profile-username {
+  color: #7f8c8d;
+  margin: 5px 0 15px 0;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 30px;
+}
+
+.stat-item {
   text-align: center;
 }
 
-.divider {
+.stat-value {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #7f8c8d;
+}
+
+.profile-divider {
   width: 100%;
-  height: 2px;
-  background-color: #ccc;
-  margin: 20px 0;
+  height: 1px;
+  background-color: #e0e0e0;
 }
 
 .profile-content {
+  padding: 30px;
+}
+
+.profile-section {
+  margin-bottom: 30px;
+}
+
+.profile-section h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.achievement-card {
+  background: #f8f9fa;
+  border-radius: 12px;
   padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: transform 0.2s;
+}
+
+.achievement-card:hover {
+  transform: translateY(-2px);
+}
+
+.achievement-icon {
+  font-size: 32px;
+}
+
+.achievement-info h3 {
+  margin: 0 0 5px 0;
+  color: #2c3e50;
+}
+
+.achievement-info p {
+  margin: 0;
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.stat-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-card h3 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+  font-size: 16px;
+}
+
+.stat-card p {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #3498db;
+}
+
+.profile-name-input {
+  font-size: 24px;
+  padding: 4px 8px;
+  width: 100%;
+}
+
+.message-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.success-message,
+.error-message {
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  animation: fadein 0.3s ease;
+  width: fit-content;
+  max-width: 80%;
+  text-align: center;
+}
+
+.success-message {
+  color: #2e7d32;
+  background-color: #d0f0d4;
+}
+
+.error-message {
+  color: #b71c1c;
+  background-color: #f8d7da;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Auth.css";
+import { useNavigate } from "react-router-dom";
+
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loginIdentifier, setLoginIdentifier] = useState("");
@@ -18,19 +21,38 @@ const LoginPage = () => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage("");
-
+  
     try {
       if (!loginIdentifier || !password) {
         throw new Error("Please enter both fields.");
       }
+  
+      const response = await fetch("http://localhost:8080/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: loginIdentifier, // либо email, либо username — зависит от сервера
+          password: password,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.error || "Login failed.");
+      }
+      
+      // Успешный логин
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("nickname", data.nickname);
+      localStorage.setItem("email", data.email);
+      navigate("/");
 
-      console.log("Logging in with:", { loginIdentifier, password });
-      setTimeout(() => {
-        setIsLoading(false);
-        alert("Signed in successfully!");
-      }, 1500);
     } catch (error) {
-      setErrorMessage(error.message);
+      setErrorMessage(error.message || "Something went wrong.");
+    } finally {
       setIsLoading(false);
     }
   };
@@ -47,7 +69,9 @@ const LoginPage = () => {
         <h2 className="login-title">Welcome Back</h2>
         <p className="login-subtitle">Sign in to continue your game</p>
 
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <div className="error-content">
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+        </div>
 
         <form onSubmit={handleLogin} className="login-form">
           <div className="input-group">

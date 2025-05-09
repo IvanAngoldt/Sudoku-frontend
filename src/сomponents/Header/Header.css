@@ -1,6 +1,7 @@
 header {
     width: 100%;
-    background-color: #ebebeb;
+    background-color: #2c3e50;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header-nav {
@@ -30,14 +31,14 @@ header {
 
 .header-link {
     text-decoration: none;
-    color: #007bff;
+    color: #ffffff;
     font-size: 18px;
     font-weight: bold;
     transition: background-color 0.3s ease;
 }
 
 .header-link:hover {
-    background-color: #e0e0e0;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .header-link-text {

@@ -1,15 +1,8 @@
 import React from 'react';
+import RoundButton from './RoundButton';
 
-const Undo = ({undoClick}) => {
-    return (
-        <div
-            onClick={() => undoClick()}
-            style={{ cursor: 'pointer'}}
-        >
-
-            Отменить последнее действие
-        </div>
-    )
-}
+const Undo = ({ undoClick }) => (
+  <RoundButton onClick={undoClick} icon="↩" label="Undo" />
+);
 
 export default Undo;

@@ -31,6 +31,11 @@
   padding: 9px;
 }
 
+.avatar-menu {
+  width: 46px;
+  height: 46px;
+}
+
 .avatar:hover {
   background-color: #e0e0e0;
 }
