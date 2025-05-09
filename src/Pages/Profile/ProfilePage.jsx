@@ -148,7 +148,7 @@ const ProfilePage = () => {
         const data = await res.json();
 
         
-        setAchievements(data);
+        setAchievements(Array.isArray(data) ? data : []);
 
         
 
@@ -252,7 +252,7 @@ const ProfilePage = () => {
 
         <div className="profile-section">
           <h2>Достижения</h2>
-          <AchievementsList achievements={achievements} />
+          <AchievementsList achievements={achievements || []} />
         </div>
       </div>
 
