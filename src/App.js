@@ -23,45 +23,45 @@ import CreateAchievementsPage from "./Pages/Create/CreateAchievementsPage";
 
 import AdminPage from "./Pages/Admin/AdminPage";
 
+import { AuthProvider } from "./context/AuthContext";
+
 const App = () => {
   return (
     <BrowserRouter>
-      <AvatarProvider>
-        <Routes>
-          <Route path="CreateAchievements" element={<CreateAchievementsPage />} />
-          <Route path="Admin" element={<AdminPage />} />
-          {/* Авторизация */}
-          <Route element={<AuthLayout />}>
-            <Route path="login" element={<LoginPage />} />
-            <Route path="signup" element={<SignupPage />} />
-          </Route>
+      <AuthProvider>
+        <AvatarProvider>
+          <Routes>
+            <Route path="CreateAchievements" element={<CreateAchievementsPage />} />
+            <Route path="admin" element={<AdminPage />} />
+            {/* Авторизация */}
+            <Route element={<AuthLayout />}>
+              <Route path="login" element={<LoginPage />} />
+              <Route path="signup" element={<SignupPage />} />
+            </Route>
 
-          {/* Защищённая часть */}
-          <Route
-            element={
+            <Route element={
               <RequireAuth>
                 <MainLayout />
-              </RequireAuth>
-            }
-          >
-            <Route path="/" element={<MainPage />} />
-            <Route path="profile" element={<ProfilePage />} />
+              </RequireAuth>}>
 
-            {/* Изменённые маршруты для game */}
-            <Route path="game" element={<SingleGamePage />} />
-            <Route path="game/:id" element={<SingleGamePage />} />
+              <Route path="/" element={<MainPage />} />
+              <Route path="profile" element={<ProfilePage />} />
 
-            <Route path="tournament" element={<TournamentGamePage />} />
-            <Route path="tournament/:id" element={<TournamentGamePage />} />
+              <Route path="game" element={<SingleGamePage />} />
+              <Route path="game/:id" element={<SingleGamePage />} />
 
-            <Route path="strategies" element={<StrategiesPage />} />
-            <Route path="strategies/:strategyId" element={<StrategyDetailsPage />} />
-            <Route path="tournaments" element={<TournamentsPage />} />
-            <Route path="news" element={<NewsListPage />} />
-            <Route path="news/:id" element={<NewsPage />} />
-          </Route>
-        </Routes>
-      </AvatarProvider>
+              <Route path="tournament" element={<TournamentGamePage />} />
+              <Route path="tournament/:id" element={<TournamentGamePage />} />
+
+              <Route path="strategies" element={<StrategiesPage />} />
+              <Route path="strategies/:strategyId" element={<StrategyDetailsPage />} />
+              <Route path="tournaments" element={<TournamentsPage />} />
+              <Route path="news" element={<NewsListPage />} />
+              <Route path="news/:id" element={<NewsPage />} />
+            </Route>
+          </Routes>
+        </AvatarProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 };

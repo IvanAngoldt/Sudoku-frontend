@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Auth.css";
 import { useNavigate } from "react-router-dom";
-
+import { useAuth } from "../../context/AuthContext";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -17,39 +17,27 @@ const LoginPage = () => {
     setTouchedFields((prev) => ({ ...prev, [field]: true }));
   };
 
+  const { login } = useAuth();
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage("");
   
     try {
-      if (!loginIdentifier || !password) {
-        throw new Error("Please enter both fields.");
-      }
-  
       const response = await fetch("http://localhost:8080/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: loginIdentifier, // либо email, либо username — зависит от сервера
-          password: password,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: loginIdentifier, password }),
       });
   
       const data = await response.json();
   
-      if (!response.ok) {
-        throw new Error(data.error || "Login failed.");
-      }
-      
-      // Успешный логин
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("nickname", data.nickname);
-      localStorage.setItem("email", data.email);
+      if (!response.ok) throw new Error(data.error || "Login failed.");
+  
+      login(data.token); // <-- сохраняем и запускаем загрузку пользователя
       navigate("/");
-
+  
     } catch (error) {
       setErrorMessage(error.message || "Something went wrong.");
     } finally {
