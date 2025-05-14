@@ -7,22 +7,6 @@ import './components/AdminStyles.css';
 const AdminPage = () => {
   const [activeTab, setActiveTab] = useState(0);
 
-  // Заглушки для данных
-  const users = [
-    { id: 1, username: 'user1', registrationDate: '2024-03-20' },
-    { id: 2, username: 'user2', registrationDate: '2024-03-19' },
-  ];
-
-  const achievements = [
-    { id: 1, name: 'Первая победа', description: 'Выиграйте свой первый турнир' },
-    { id: 2, name: 'Мастер головоломок', description: 'Решите 100 судоку' },
-  ];
-
-  const tournaments = [
-    { id: 1, name: 'Весенний турнир', participants: 15 },
-    { id: 2, name: 'Чемпионат по судоку', participants: 25 },
-  ];
-
   return (
     <div className="admin-container">
       <h1>Панель администратора</h1>

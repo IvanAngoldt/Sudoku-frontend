@@ -1,104 +1,90 @@
-import { useState, useEffect } from "react";
-import "./TournamentsPage.css";
+import React, { useEffect, useState } from 'react';
+import UpcomingTournament from './components/UpcomingTournament';
+import ActiveTournament from './components/ActiveTournament';
+import FinishedTournament from './components/FinishedTournament';
 
 const TournamentsPage = () => {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0
-  });
-
-  const tournamentStartDate = new Date('2025-05-10T18:00:00Z');
+  const [tournament, setTournament] = useState(null);
+  const [error, setError] = useState(null);
+  const [noTournament, setNoTournament] = useState(false);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      const now = new Date();
-      const difference = tournamentStartDate - now;
+    const fetchTournament = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('Пользователь не авторизован');
+        }
 
-      if (difference <= 0) {
-        clearInterval(timer);
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        return;
+        const res = await fetch('http://localhost:8080/tournaments/current', {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error(`Ошибка запроса: ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        // Поддержка ответа: null или { tournament: null }
+        const t = data?.tournament ?? data;
+
+        if (!t) {
+          setNoTournament(true);
+        } else {
+          setTournament(t);
+        }
+      } catch (err) {
+        console.error(err);
+        setError(err.message);
       }
+    };
 
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((difference / 1000 / 60) % 60);
-      const seconds = Math.floor((difference / 1000) % 60);
-
-      setTimeLeft({ days, hours, minutes, seconds });
-    }, 1000);
-
-    return () => clearInterval(timer);
+    fetchTournament();
   }, []);
 
-  const participants = [
-    { id: 1, name: "Иван Петров", elo: 2450 },
-    { id: 2, name: "Анна Сидорова", elo: 2300 },
-    { id: 3, name: "Петр Иванов", elo: 2200 },
-    { id: 4, name: "Мария Смирнова", elo: 2150 },
-    { id: 5, name: "Алексей Козлов", elo: 2100 },
-  ].sort((a, b) => b.elo - a.elo); // Сортировка по убыванию ELO
+  if (error) {
+    return <div style={styles.center}>Ошибка загрузки турнира: {error}</div>;
+  }
 
-  const handleRegister = () => {
-    // Здесь будет логика регистрации
-    alert('Функция регистрации будет реализована позже');
-  };
-
-  return (
-    <div className="tournaments-main-container">
-      <div className="tournaments-main-content">
-        <h1>Предстоящий турнир</h1>
-        
-        <div className="countdown-container">
-          <h2>До начала турнира осталось:</h2>
-          <div className="countdown-timer">
-            <div className="countdown-item">
-              <span className="countdown-value">{timeLeft.days}</span>
-              <span className="countdown-label">дней</span>
-            </div>
-            <div className="countdown-item">
-              <span className="countdown-value">{timeLeft.hours}</span>
-              <span className="countdown-label">часов</span>
-            </div>
-            <div className="countdown-item">
-              <span className="countdown-value">{timeLeft.minutes}</span>
-              <span className="countdown-label">минут</span>
-            </div>
-            <div className="countdown-item">
-              <span className="countdown-value">{timeLeft.seconds}</span>
-              <span className="countdown-label">секунд</span>
-            </div>
-          </div>
-        </div>
-
-        <button className="register-button" onClick={handleRegister}>
-          Зарегистрироваться на турнир
-        </button>
-
-        <div className="tournaments-table-container">
-          <h2>Зарегистрированные участники</h2>
-          <table className="tournaments-table">
-            <thead>
-              <tr>
-                <th style={{textAlign: "left"}}>Участник</th>
-                <th style={{textAlign: "right"}}>ELO</th>
-              </tr>
-            </thead>
-            <tbody>
-              {participants.map((participant, index) => (
-                <tr key={participant.id}>
-                  <td>{participant.name}</td>
-                  <td className="elo-cell">{participant.elo}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+  if (noTournament) {
+    return (
+      <div style={styles.center}>
+        <h2>🎯 Сейчас нет активных турниров</h2>
+        <p>Следите за новостями — скоро начнётся новый турнир!</p>
       </div>
-    </div>
-  );
+    );
+  }
+
+  if (!tournament) {
+    return <div style={styles.center}>Загрузка...</div>;
+  }
+
+  switch (tournament.status) {
+    case 'upcoming':
+      return <UpcomingTournament tournament={tournament} />;
+    case 'active':
+      return <ActiveTournament tournament={tournament} />;
+    case 'finished':
+      return <FinishedTournament tournament={tournament} />;
+    default:
+      return <div style={styles.center}>Неизвестный статус турнира</div>;
+  }
+};
+
+const styles = {
+  center: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '70vh',
+    fontSize: '1.2rem',
+    textAlign: 'center',
+  },
 };
 
 export default TournamentsPage;

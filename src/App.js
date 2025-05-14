@@ -7,18 +7,19 @@ import SignupPage from "./Pages/Auth/SignupPage";
 import MainLayout from "./Pages/MainLayout";
 import ProfilePage from "./Pages/Profile/ProfilePage";
 import MainPage from "./Pages/Main/MainPage";
-import SingleGamePage from "./Pages/SingleGame/SingleGamePage";
 import StrategiesPage from "./Pages/Strategies/StrategiesPage";
 import StrategyDetailsPage from "./Pages/Strategies/StrategyDetailsPage";
 import TournamentsPage from "./Pages/Tournaments/TournamentsPage";
 import NewsPage from "./Pages/News/NewsPage";
 import NewsListPage from "./Pages/News/NewsListPage";
 
+import SingleGamePage from "./Pages/SingleGame/SingleGamePage";
+import TournamentGamePage from "./Pages/TournamentGame/TournamentGamePage";
+
 import RequireAuth from "./RequireAuth";
 import { AvatarProvider } from "./context/avatar-context";
 
 import CreateAchievementsPage from "./Pages/Create/CreateAchievementsPage";
-import GameEntryPage from "./Pages/SingleGame/GameEntryPage"; // новый файл
 
 import AdminPage from "./Pages/Admin/AdminPage";
 
@@ -47,8 +48,11 @@ const App = () => {
             <Route path="profile" element={<ProfilePage />} />
 
             {/* Изменённые маршруты для game */}
-            <Route path="game" element={<GameEntryPage />} />
+            <Route path="game" element={<SingleGamePage />} />
             <Route path="game/:id" element={<SingleGamePage />} />
+
+            <Route path="tournament" element={<TournamentGamePage />} />
+            <Route path="tournament/:id" element={<TournamentGamePage />} />
 
             <Route path="strategies" element={<StrategiesPage />} />
             <Route path="strategies/:strategyId" element={<StrategyDetailsPage />} />

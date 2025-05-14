@@ -1,12 +1,12 @@
-.strategy-content {
-    flex: 1 1;
+.strategy-main-container {
     width: 900px;
-    height: 100%;
     background-color: #f9f9f9;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.strategy-content {
     padding: 20px;
-    box-sizing: border-box;
 }
 
 .not_found {

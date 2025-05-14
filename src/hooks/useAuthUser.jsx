@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export const useAuthUser = () => {
-  const [user, setUser] = useState(null);
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,11 +19,11 @@ export const useAuthUser = () => {
       .then(async (res) => {
         if (!res.ok) throw new Error("Unauthorized");
         const data = await res.json();
-        setUser(data);
+        setData(data);
       })
-      .catch(() => setUser(null))
+      .catch(() => setData(null))
       .finally(() => setLoading(false));
   }, []);
 
-  return { user, loading };
+  return { data, loading };
 };

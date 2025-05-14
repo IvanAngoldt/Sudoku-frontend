@@ -1,6 +1,5 @@
 import React from "react";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { useAuthUser } from "../../../hooks/useAuthUser";
+import { useCallback } from "react";
 import GameSection from "./GameSection";
 import StatusSection from "./StatusSection";
 import Numbers from "./Numbers";
@@ -11,15 +10,15 @@ import SudokuStatsPopup from "../../SudokuStatsPopup/SudokuStatsPopup";
 
 import "./sudokuStyles.css";
 
-const Game = () => {
-  const { id } = useParams();
-  const { user } = useAuthUser();
-
-  const navigate = useNavigate();
+const Game = ({ 
+  initialField, 
+  solution, 
+  complexity, 
+  stats,
+  onGameComplete,
+  onDifficultyChange 
+}) => {
   
-  const [loadError, setLoadError] = React.useState(false);
-  const [difficulty, setDifficulty] = React.useState('');
-
   const [gameArray, setGameArray] = React.useState([]);
   const [initArray, setInitArray] = React.useState([]);
   const [solvedArray, setSolvedArray] = React.useState([]);
@@ -35,71 +34,73 @@ const Game = () => {
   const [resetTimer, setResetTimer] = React.useState(false);
   const [won, setWon] = React.useState(false);
   const [elapsedTime, setElapsedTime] = React.useState(0);
-  const [sudokuID, setSudokuID] = React.useState("");
-  const [stats, setStats] = React.useState(null);
   const [newAchievements, setNewAchievements] = React.useState([]);
+  const [showStats, setShowStats] = React.useState(true);
+  const [statsTimer, setStatsTimer] = React.useState(null);
+  const statsRef = React.useRef(null);
 
   const parseSudokuString = (input) => input.split(",");
 
-  const getSudokuById = async (id) => {
-    const response = await fetch(`http://localhost:8080/game/sudoku/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Ошибка: ${response.status}`);
+  const startStatsTimer = () => {
+    if (statsTimer) {
+      clearTimeout(statsTimer);
     }
+    const timer = setTimeout(() => {
+      setShowStats(false);
+    }, 5000);
+    setStatsTimer(timer);
+  };
 
-    const data = await response.json();
-    return data;
+  const handleStatsMouseEnter = () => {
+    if (statsTimer) {
+      clearTimeout(statsTimer);
+    }
+  };
+
+  const handleStatsMouseLeave = () => {
+    startStatsTimer();
+  };
+
+  const handleClickOutside = (event) => {
+    if (statsRef.current && !statsRef.current.contains(event.target)) {
+      setShowStats(false);
+      if (statsTimer) {
+        clearTimeout(statsTimer);
+      }
+    }
   };
 
   React.useEffect(() => {
-    const loadSudoku = async () => {
-      try {
-        const data = await getSudokuById(id);
-        setSudokuID(data.id);
-        setGameArray(parseSudokuString(data.initial_field));
-        setInitArray(parseSudokuString(data.initial_field));
-        setSolvedArray(parseSudokuString(data.solution));
-        setDifficulty(data.complexity);
-
-        setStats({
-          complexity: data.complexity,
-          avgTimeMs: data.avg_solve_time_ms,
-          attempts: data.solve_attempts,
-          successRate: data.success_rate
-        });
-
-        setCellSelected(-1);
-        setIncorrectCells([]);
-        setCompletedNumbers([]);
-        setHighlightCubes([]);
-        setHighlightNumber(-1);
-        setNoteMode(false);
-        setNotesArray([]);
-        setHistory([]);
-        setResetTimer(true);
-        setWon(false);
-        setElapsedTime(0);
-        setLoadError(false);
-
-        const initialNotesArray = new Array(81).fill(null).map(() => []);
-        setNotesArray(initialNotesArray);
-      } catch (error) {
-        console.error("Ошибка при загрузке судоку:", error);
-        setLoadError(true);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      if (statsTimer) {
+        clearTimeout(statsTimer);
       }
     };
+  }, [statsTimer]);
 
-    if (id) {
-      loadSudoku();
-    }
-  }, [id]);
+  React.useEffect(() => {
+    setGameArray(parseSudokuString(initialField));
+    setInitArray(parseSudokuString(initialField));
+    setSolvedArray(parseSudokuString(solution));
+    setCellSelected(-1);
+    setIncorrectCells([]);
+    setCompletedNumbers([]);
+    setHighlightCubes([]);
+    setHighlightNumber(-1);
+    setNoteMode(false);
+    setNotesArray([]);
+    setHistory([]);
+    setResetTimer(true);
+    setWon(false);
+    setElapsedTime(0);
+    setShowStats(true);
+    startStatsTimer();
+
+    const initialNotesArray = new Array(81).fill(null).map(() => []);
+    setNotesArray(initialNotesArray);
+  }, [initialField, solution]);
 
   React.useEffect(() => {
     if (resetTimer) {
@@ -107,82 +108,13 @@ const Game = () => {
     }
   }, [resetTimer]);
 
-  React.useEffect(() => {
-    const handleKeyDown = (event) => {
-      const { key } = event;
-      if (key >= "1" && key <= "9") {
-        if (cellSelected !== -1) {
-          handleNumberClick(key.toString());
-        }
-      }
-      if (key === "0") {
-        userClickedNote();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [gameArray, cellSelected, notesArray, noteMode, isGameActive]);
-
-  React.useEffect(() => {
-    checkCompletedNumbers(gameArray);
-  }, [gameArray]);
-
-  const handleTimerStatusChange = (status) => {
-    setIsGameActive(status);
-  };
-
-  const handleDifficultyChange = async (newDifficulty) => {
-    try {
-      const response = await fetch(
-        `http://localhost:8080/game/get-random-sudoku/${newDifficulty}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Ошибка при загрузке судоку");
-      }
-
-      const data = await response.json();
-      const newId = data.id;
-      setDifficulty(newDifficulty);
-      navigate(`/game/${newId}`);
-    } catch (error) {
-      console.error("Ошибка при смене сложности:", error);
-    }
-  };
-
-  const checkCompletedNumbers = (array) => {
-    const count = Array(9).fill(0);
-    array.forEach((value) => {
-      if (value !== "0") {
-        count[parseInt(value) - 1]++;
-      }
-    });
-
-    const completed = [];
-    count.forEach((num, index) => {
-      if (num === 9) {
-        completed.push((index + 1).toString());
-      }
-    });
-
-    setCompletedNumbers(completed);
-  };
-
-  const isSolved = (index, value) => {
+  const isSolved = useCallback((index, value) => {
     return gameArray.every((cell, i) =>
       i === index ? value === solvedArray[i] : cell === solvedArray[i]
     );
-  };
+  }, [gameArray, solvedArray]);
 
-  const fillCell = (index, value, isCorrect) => {
+  const fillCell = useCallback((index, value, isCorrect) => {
     if (initArray[index] === "0" && isGameActive) {
       let tempHistory = history.slice();
       tempHistory.push({
@@ -229,62 +161,22 @@ const Game = () => {
 
         const sendResult = async () => {
           try {
-            // 1. Отправка информации о решённом судоку
-            await fetch("http://localhost:8080/game/sudoku/solved", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-              body: JSON.stringify({
-                id: sudokuID,
-                solve_time_ms: elapsedTime * 1000,
-              }),
-            });
-        
-            // 2. Обновление статистики пользователя
-            if (user?.id) {
-              await fetch("http://localhost:8080/users/statistics/update", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-                body: JSON.stringify({
-                  user_id: user.id,
-                  difficulty: difficulty,
-                  time_seconds: elapsedTime,
-                }),
-              });
+            const result = await onGameComplete(elapsedTime * 1000);
+            if (Array.isArray(result.qualified_rewards) && result.qualified_rewards.length > 0) {
+              setNewAchievements(result.qualified_rewards);
             }
-        
-            // 3. Проверка на получение достижений
-            const checkRes = await fetch("http://localhost:8080/game/check-achievements", {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            });
-        
-            if (!checkRes.ok) throw new Error("Failed to check achievements");
-        
-            const data = await checkRes.json();
-
-            if (Array.isArray(data) && data.length > 0) {
-              setNewAchievements(data);
-            }
-
           } catch (err) {
             console.error("Ошибка при отправке результата:", err);
           }
         };
-
+      
         sendResult();
       }
     }
-  };
+  }, [gameArray, initArray, isGameActive, notesArray, history, setHistory, 
+    elapsedTime, highlightCubes, incorrectCells, isSolved, onGameComplete]);
 
-  const fillNote = (index, value) => {
+  const fillNote = useCallback((index, value) => {
     if (initArray[index] === "0" && isGameActive) {
       let tempHistory = history.slice();
       tempHistory.push({
@@ -303,6 +195,83 @@ const Game = () => {
       setNotesArray(tempNotes);
       setHistory(tempHistory);
     }
+  }, [initArray, history, isGameActive, gameArray, notesArray, fillCell, setHighlightNumber, setHistory]);
+
+  const makeHighlightNumber = useCallback((number) => {
+    setHighlightNumber(number !== "0" ? number : -1);
+  }, [setHighlightNumber]);
+
+  const userFillCell = useCallback((index, value) => {
+    const isCorrect = value === solvedArray[index];
+    fillCell(index, value, isCorrect);
+  }, [fillCell, solvedArray]);
+
+  const handleNumberClick = useCallback((number) => {
+    if (cellSelected === -1 || initArray[cellSelected] !== "0" || !isGameActive) return;
+
+    if (!noteMode) {
+      if (gameArray[cellSelected] === number) {
+        userFillCell(cellSelected, "0");
+        setHighlightNumber(-1);
+      } else {
+        userFillCell(cellSelected, number);
+        makeHighlightNumber(number);
+      }
+    } else {
+      if (notesArray[cellSelected].includes(number)) {
+        const updatedNotes = notesArray[cellSelected].filter((n) => n !== number);
+        setNotesArray((prev) => {
+          const updated = [...prev];
+          updated[cellSelected] = updatedNotes;
+          return updated;
+        });
+      } else {
+        fillNote(cellSelected, number);
+      }
+    }
+  }, [cellSelected, initArray, isGameActive, noteMode, gameArray, notesArray, fillNote, makeHighlightNumber, userFillCell]);
+
+  React.useEffect(() => {
+    const handleKeyDown = (event) => {
+      const { key } = event;
+      if (key >= "1" && key <= "9") {
+        if (cellSelected !== -1) {
+          handleNumberClick(key.toString());
+        }
+      }
+      if (key === "0") {
+        userClickedNote();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [gameArray, cellSelected, notesArray, noteMode, isGameActive, handleNumberClick]);
+
+  React.useEffect(() => {
+    checkCompletedNumbers(gameArray);
+  }, [gameArray]);
+
+  const handleTimerStatusChange = (status) => {
+    setIsGameActive(status);
+  };
+
+  const checkCompletedNumbers = (array) => {
+    const count = Array(9).fill(0);
+    array.forEach((value) => {
+      if (value !== "0") {
+        count[parseInt(value) - 1]++;
+      }
+    });
+
+    const completed = [];
+    count.forEach((num, index) => {
+      if (num === 9) {
+        completed.push((index + 1).toString());
+      }
+    });
+
+    setCompletedNumbers(completed);
   };
 
   const userClickedUndo = () => {
@@ -348,11 +317,6 @@ const Game = () => {
     checkCompletedNumbers(lastState.gameArray);
   };
 
-  const userFillCell = (index, value) => {
-    const isCorrect = value === solvedArray[index];
-    fillCell(index, value, isCorrect);
-  };
-
   const highLightingCells = (index) => {
     const indexes = [];
     const rowStart = Math.floor(index / 9) * 9;
@@ -376,35 +340,6 @@ const Game = () => {
   const highlightingNumbers = (index) => {
     const value = gameArray[index];
     setHighlightNumber(value !== "0" ? value : -1);
-  };
-
-  const makeHighlightNumber = (number) => {
-    setHighlightNumber(number !== "0" ? number : -1);
-  };
-
-  const handleNumberClick = (number) => {
-    if (cellSelected === -1 || initArray[cellSelected] !== "0" || !isGameActive) return;
-
-    if (!noteMode) {
-      if (gameArray[cellSelected] === number) {
-        userFillCell(cellSelected, "0");
-        setHighlightNumber(-1);
-      } else {
-        userFillCell(cellSelected, number);
-        makeHighlightNumber(number);
-      }
-    } else {
-      if (notesArray[cellSelected].includes(number)) {
-        const updatedNotes = notesArray[cellSelected].filter((n) => n !== number);
-        setNotesArray((prev) => {
-          const updated = [...prev];
-          updated[cellSelected] = updatedNotes;
-          return updated;
-        });
-      } else {
-        fillNote(cellSelected, number);
-      }
-    }
   };
 
   const handleCellClicked = (index) => {
@@ -439,25 +374,21 @@ const Game = () => {
         setHistory(tempHistory);
     };
 
-    if (loadError) {
-        return (
-        <div className="game-container">
-            <h2>Судоку не найдено</h2>
-            <p>Проверьте ссылку или начните новую игру.</p>
-            <button onClick={() => window.location.href = "/game"}>Новая игра</button>
-        </div>
-        );
-    }
-
     return (
         <div className="game-container">
-          {stats && (
-            <SudokuStatsPopup
-              complexity={stats.complexity}
-              avgTimeMs={stats.avgTimeMs}
-              attempts={stats.attempts}
-              successRate={stats.successRate}
-            />
+          {stats && showStats && (
+            <div 
+              ref={statsRef}
+              onMouseEnter={handleStatsMouseEnter}
+              onMouseLeave={handleStatsMouseLeave}
+            >
+              <SudokuStatsPopup
+                complexity={stats.complexity}
+                avgTimeMs={stats.avgTimeMs}
+                attempts={stats.attempts}
+                successRate={stats.successRate}
+              />
+            </div>
           )}
 
           <Overlay won={won} 
@@ -471,9 +402,9 @@ const Game = () => {
             onTimeUpdate={setElapsedTime}
           />
           <Difficulty
-            onDifficultyChange={handleDifficultyChange}
+            onDifficultyChange={onDifficultyChange}
             isActive={isGameActive}
-            difficulty={difficulty}
+            difficulty={complexity}
           />
           <GameSection
             gameArray={gameArray}

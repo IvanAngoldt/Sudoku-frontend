@@ -57,7 +57,7 @@ const LastRemainingCellInABox = ({ onStrategyLearned }) => {
     };
 
     return (
-        <div>
+        <div className="strategy-container">
             <h1>Last Remaining Cell in a Box</h1>
             <TraintFeld 
                 steps={steps} 

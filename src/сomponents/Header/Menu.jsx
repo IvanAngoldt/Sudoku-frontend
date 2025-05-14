@@ -6,13 +6,11 @@ import Avatar from '../Avatar/Avatar';
 import './Menu.css';
 
 const Menu = () => {
-  const { user, loading } = useAuthUser();
-
-  
+  const { data, loading } = useAuthUser();
 
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Состояние для модального окна
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const handleMouseEnter = () => {
@@ -53,7 +51,7 @@ const Menu = () => {
 
       <div className='avatar'>
         <div className='avatar-menu'>
-          <Avatar isEditing={false} />
+          <Avatar isEditing={false} userID={data?.user?.id} />
         </div>
         
         <svg fill="none" height="8" viewBox="0 0 12 8" width="12" xmlns="http://www.w3.org/2000/svg">
@@ -68,7 +66,7 @@ const Menu = () => {
 
       <div className={`header-menu ${menuOpen ? 'open' : ''}`}>
         <div className="header-menu-item username">
-          <div>{user?.email || "unknown"}</div>
+          <div>{data?.user?.email || "unknown"}</div>
         </div>
     
         <Link to="profile" className="header-menu-item">

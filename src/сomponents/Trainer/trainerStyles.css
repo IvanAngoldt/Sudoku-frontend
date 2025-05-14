@@ -4,8 +4,18 @@
     align-items: flex-start;
 }
 
-.game__board {
+.train-game__board {
     width: 100%;
+    font-size: 26px;
+    font-family: 'Noto Sans', sans-serif;
+    border: 3px solid var(--color-grey);
+    border-collapse: collapse;
+  
+  
+    aspect-ratio: 1 / 1;
+    max-width: 600px;
+    border-collapse: collapse;
+    table-layout: fixed;
 }
 
 .name_column {
@@ -15,39 +25,39 @@
 }
 
 .name_column-label:nth-child(1) {
-    margin-top: 15px;
+    margin-top: 14px;
 }
 
 .name_column-label:nth-child(2) {
-    margin-top: 33px;
+    margin-top: 35px;
 }
 
 .name_column-label:nth-child(3) {
-    margin-top: 33px;
+    margin-top: 34px;
 }
 
 .name_column-label:nth-child(4) {
-    margin-top: 33px;
+    margin-top: 36px;
 }
 
 .name_column-label:nth-child(5) {
-    margin-top: 33px;
+    margin-top: 35px;
 }
 
 .name_column-label:nth-child(6) {
-    margin-top: 33px;
+    margin-top: 35px;
 }
 
 .name_column-label:nth-child(7) {
-    margin-top: 33px;
+    margin-top: 37px;
 }
 
 .name_column-label:nth-child(8) {
-    margin-top: 30px;
+    margin-top: 35px;
 }
 
 .name_column-label:nth-child(9) {
-    margin-top: 30px;
+    margin-top: 34px;
 }
 
 .name_row {

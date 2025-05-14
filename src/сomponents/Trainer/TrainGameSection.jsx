@@ -395,7 +395,7 @@ const TrainGameSection = (
                     ))}
                 </div>
 
-                <table className="game__board">
+                <table className="train-game__board">
                     <tbody>
                     {
                         rows.map((row) => (

@@ -1,0 +1,10 @@
+.tournament-game-main-container {
+  width: 900px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+  
+.tournament-game-content {
+  padding: 20px;
+}

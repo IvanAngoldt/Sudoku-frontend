@@ -105,20 +105,22 @@ const StrategyDetailsPage = () => {
     }
 
     return (
-        <div className="strategy-content">
-            <div className="navigation-buttons">
-                <Link to={"/strategies"} className="back-button">
-                    <FaArrowLeft />
-                    <span>Назад к списку стратегий</span>
-                </Link>
-                {isStrategyLearned && nextStrategyId && (
-                    <Link to={`/strategies/${nextStrategyId}`} className="next-button">
-                        <span>Следующая стратегия</span>
-                        <FaArrowRight />
+        <div className="strategy-main-container">
+            <div className="strategy-content">
+                <div className="navigation-buttons">
+                    <Link to={"/strategies"} className="back-button">
+                        <FaArrowLeft />
+                        <span>Назад к списку стратегий</span>
                     </Link>
-                )}
+                    {isStrategyLearned && nextStrategyId && (
+                        <Link to={`/strategies/${nextStrategyId}`} className="next-button">
+                            <span>Следующая стратегия</span>
+                            <FaArrowRight />
+                        </Link>
+                    )}
+                </div>
+                <StrategyComponent onStrategyLearned={() => setIsStrategyLearned(true)} />
             </div>
-            <StrategyComponent onStrategyLearned={() => setIsStrategyLearned(true)} />
         </div>
     );
 };
