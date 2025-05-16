@@ -66,7 +66,15 @@ const UserManagement = () => {
                   {user.username}
                 </button>
               </td>
-              <td>{user.registrationDate}</td>
+              <td>
+                {new Date(user.created_at).toLocaleString('ru-RU', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </td>
               <td>
                 <div className="action-buttons">
                   <button className="action-button block" title="Заблокировать">
